@@ -330,7 +330,7 @@ __execute_phases() {
 	declare -rx PKGCORE_EBUILD_PROCESS_PID=${BASHPID}
 
 	if __safe_has "${EAPI:-0}" 0 1 2 3; then
-		declare -rx PKGCORE_NONFATAL_HELPER=true
+		declare -rx PKGCORE_NONFATAL=true
 	fi
 
 	local myarg ret
