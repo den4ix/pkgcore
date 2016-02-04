@@ -184,7 +184,7 @@ def write_pkgcore_lookup_configs(python_base, install_prefix, injected_bin_path=
     byte_compile([path], optimize=2, prefix=python_base)
 
 
-class test(pkgdist.test):
+class test(pkgdist.PyTest):
 
     def run(self):
         # This is fairly hacky, but is done to ensure that the tests
@@ -194,7 +194,7 @@ class test(pkgdist.test):
         original = os.environ.get(key)
         try:
             os.environ[key] = os.path.dirname(os.path.realpath(__file__))
-            return pkgdist.test.run(self)
+            return pkgdist.PyTest.run(self)
         finally:
             if original is not None:
                 os.environ[key] = original
@@ -235,6 +235,10 @@ cmdclass = {
 }
 command_options = {}
 
+test_requirements = ['pytest']
+if sys.hexversion < 0x03030000:
+    test_requirements.append('mock')
+
 with io.open('README.rst', encoding='utf-8') as f:
     readme = f.read()
 
@@ -250,6 +254,7 @@ setup(
     packages=find_packages(),
     setup_requires=['snakeoil>=0.6.7'],
     install_requires=['snakeoil>=0.6.7'],
+    tests_require=test_requirements,
     scripts=os.listdir('bin'),
     data_files=list(chain(
         pkgdist.data_mapping(EBD_INSTALL_OFFSET, 'ebd'),
